@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SkateApp</string>
+    <string name="dialog_title">Enter Names of Skaters</string>
 </resources>

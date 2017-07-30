@@ -11,6 +11,7 @@ public class SkateActivity extends SingleFragmentActivity {
 
     private static final String EXTRA_MODEL_ID = "com.example.jiahang.skateapp.model_id";
 
+    // convenience method to create an intent to start SkateActivity from MainFragment
     public static Intent newIntent(Context packageContext, UUID modelId) {
         Intent intent = new Intent(packageContext, SkateActivity.class);
         intent.putExtra(EXTRA_MODEL_ID, modelId);

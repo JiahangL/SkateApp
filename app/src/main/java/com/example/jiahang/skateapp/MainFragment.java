@@ -1,5 +1,6 @@
 package com.example.jiahang.skateapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -44,12 +45,10 @@ public class MainFragment extends Fragment {
                 FragmentManager manager = getFragmentManager();
                 ModelCreatorFragment dialog = ModelCreatorFragment.newInstance();
                 // TODO: Can we set the target fragment to be a SkateFragment?
+                // FIX: Pass the model data to MainFragment, and let MainFragment create the mode;
+                //      and start SkateFragment
                 dialog.setTargetFragment(MainFragment.this, REQUEST_MODEL);
                 dialog.show(manager, DIALOG_MODEL);
-
-                // Creates an intent to start a SkateActivity with our newly created model
-                Intent intent = SkateActivity.newIntent(getActivity(), model.getId());
-                startActivity(intent);
             }
         });
 
@@ -62,5 +61,28 @@ public class MainFragment extends Fragment {
         super.onResume();
     }
 
+    // receive the result from ModelCreatorFragment as an intent, get the player names from that intent,
+    // which are contained as extras.
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode != Activity.RESULT_OK)
+            return;
+
+        if(requestCode == REQUEST_MODEL) {
+            String player1 = data.getSerializableExtra(ModelCreatorFragment.EXTRA_PLAYER_1).toString();
+            String player2 = data.getSerializableExtra(ModelCreatorFragment.EXTRA_PLAYER_2).toString();
+
+            model = new Model();
+            model.setPlayer1(player1);
+            model.setPlayer2(player2);
+
+            //Once new model is created; add it to the database
+            ModelGroup.get(getActivity()).addModel(model);
+
+            // Creates an intent to start a SkateActivity with our newly created model
+            Intent intent = SkateActivity.newIntent(getActivity(), model.getId());
+            startActivity(intent);
+        }
+    }
 
 }
