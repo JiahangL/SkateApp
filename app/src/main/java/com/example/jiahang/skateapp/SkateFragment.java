@@ -70,6 +70,7 @@ public class SkateFragment extends Fragment {
         player_2_STATUS = (TextView)v.findViewById(R.id.player_2_SKATE);
         //initialize player buttons
         player_1_fail = (Button)v.findViewById(R.id.player_1_add);
+        //TODO: set STATUS texts based on previous state;
         player_1_fail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

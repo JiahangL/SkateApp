@@ -43,7 +43,7 @@ public class ListFragment extends Fragment {
         public void bind(Model model){
             this.model = model;
             listItemNames.setText(model.getPlayer1()+":"+model.getPlayer2());
-            listItemScore.setText(model.getPlayer1_skate()+":"+model.getPlayer2());
+            listItemScore.setText(model.getPlayer1_skate()+":"+model.getPlayer2_skate());
         }
 
         // when list item is clicked, resume a game according to the selected list item
