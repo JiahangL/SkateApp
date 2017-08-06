@@ -53,9 +53,6 @@ public class SkateFragment extends Fragment {
         // FIXED (STUPID) BUG: forgot to put in the UUID for the ContentValue, field was null in database
 
         model = ModelGroup.get(getActivity()).getModel(modelId);
-        Log.d("TAG", "SkateFragment's passed model: " + modelId);
-        if(model == null)
-            Log.d("TAG", "SkateFragment's model is null");
     }
 
     @Override
@@ -145,12 +142,27 @@ public class SkateFragment extends Fragment {
 
         return v;
     }
-    // If we were to exit this fragment, the onStop() method would be called before being destroyed
-    //    Before destroying this fragment, we should save the changes we made to our model instance
-    // and update the database accordingly.
+    /* If we were to exit this fragment, the onStop() method would be called before being destroyed
+     *    Before destroying this fragment, we should save the changes we made to our model instance
+     * and update the database accordingly.
+     *
+     * PROBLEM: when SkateFragment started from ListFragment, list would not update when returning
+     *          from started SkateFragment via the back button
+     * FIX: Remember lifecycle call sequence when starting activities, let's say A starts B:
+     *          - A's onPause executes
+     *          - B's onCreate(), onStart(), onResume() executes, B is now visible
+     *          - A no longer visible, onStop() executes
+     *
+     *      if we update our singleton's data in the A's onStop(), while we updates B's UI in
+     *      B's onResume(), the UI gets updated before the data gets updated! In our case, it is
+     *      OK to update our singleton's data in A's onPause() first, so the data set is changed
+     *      before the UI is updated
+     *
+     */
+
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         // pass the model instance we are currently working on, and probably have modified, into
         // the ModelGroup, which is the "model manager".
         ModelGroup.get(getActivity()).updateModel(model);

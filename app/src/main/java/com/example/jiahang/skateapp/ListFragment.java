@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,10 +57,10 @@ public class ListFragment extends Fragment {
 
     //This is the list adapter
     private class CustomAdapter extends RecyclerView.Adapter<ModelHolder>{
-        private List<Model> modelList;
+        private List<Model> myModelList;
 
         public CustomAdapter(List<Model> modelList) {
-            this.modelList = modelList;
+            myModelList = modelList;
         }
 
         @Override
@@ -70,17 +71,17 @@ public class ListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ModelHolder holder, int position) {
-            Model model = modelList.get(position);
+            Model model = myModelList.get(position);
             holder.bind(model);
         }
 
         @Override
         public int getItemCount() {
-            return modelList.size();
+            return myModelList.size();
         }
 
         public void setModelList(List<Model> modelList) {
-            this.modelList = modelList;
+            myModelList = modelList;
         }
 
     }
@@ -90,6 +91,7 @@ public class ListFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.list_fragment, container, false);
 
@@ -101,9 +103,19 @@ public class ListFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateList();
+    }
+
     private void updateList() {
         ModelGroup modelGroup = ModelGroup.get(getActivity());
         List<Model> models = modelGroup.getModelList();
+
+        int score = models.get(0).getPlayer1_skate()+models.get(0).getPlayer2_skate();
+
+        Log.d("TAG", "total score is " + score);
 
         if(myAdapter == null) {
             myAdapter = new CustomAdapter(models);
