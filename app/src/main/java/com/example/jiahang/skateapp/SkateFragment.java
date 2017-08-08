@@ -19,6 +19,8 @@ import java.util.UUID;
 public class SkateFragment extends Fragment {
     private static final String ARG_MODEL_ID = "model_id";
 
+    private static final String[] SKATE = new String[] {"Clear", "S", "S.K", "S.K.A", "S.K.A.T", "S.K.A.T.E"};
+
     private TextView player_1;
     private TextView player_1_STATUS;
     private TextView player_2;
@@ -67,37 +69,27 @@ public class SkateFragment extends Fragment {
         player_2_STATUS = (TextView)v.findViewById(R.id.player_2_SKATE);
         //initialize player buttons
         player_1_fail = (Button)v.findViewById(R.id.player_1_add);
+
         //TODO: set STATUS texts based on previous state;
+        player_1_STATUS.setText(SKATE[model.getPlayer1_skate()]);
+        player_2_STATUS.setText(SKATE[model.getPlayer2_skate()]);
+
+
         player_1_fail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int playerStatus = model.getPlayer1_skate();
-                //TODO: Define constants for the switch cases?
-                switch(playerStatus){
-                    case 0:
-                        player_1_STATUS.setText("S");
-                        // update current model instance, database will be update in onStop()
-                        model.setPlayer1_skate(1);
-                        break;
-                    case 1:
-                        player_1_STATUS.setText("S.K");
-                        model.setPlayer1_skate(2);
-                        break;
-                    case 2:
-                        player_1_STATUS.setText("S.K.A");
-                        model.setPlayer1_skate(3);
-                        break;
-                    case 3:
-                        player_1_STATUS.setText("S.K.A.T");
-                        model.setPlayer1_skate(4);
-                        break;
-                    case 4:
-                        player_1_STATUS.setText("S.K.A.T.E");
-                        model.setPlayer1_skate(5);
-                        break;
-                    default:
-                        player_1_STATUS.setText("YOU LOSE");
-                        break;
+                if(playerStatus == 5) {
+                    player_1_STATUS.setText("YOU LOSE");
+                } else {
+                    /* originally ran into the mistake of using post incrementer in
+                     * parameter. Java is PASS BY VALUE. post incrementer passes the
+                     * original value, then increments it. The method would the original value
+                     * before it was incremented.
+                    */
+                    playerStatus++;
+                    model.setPlayer1_skate(playerStatus);
+                    player_1_STATUS.setText(SKATE[playerStatus]);
                 }
             }
         });
@@ -108,31 +100,17 @@ public class SkateFragment extends Fragment {
             public void onClick(View v) {
                 int playerStatus = model.getPlayer2_skate();
                 //TODO: Define constants for the switch cases?
-                switch(playerStatus){
-                    case 0:
-                        player_2_STATUS.setText("S");
-                        // update current model instance, database will be update in onStop()
-                        model.setPlayer2_skate(1);
-                        break;
-                    case 1:
-                        player_2_STATUS.setText("S.K");
-                        model.setPlayer2_skate(2);
-                        break;
-                    case 2:
-                        player_2_STATUS.setText("S.K.A");
-                        model.setPlayer2_skate(3);
-                        break;
-                    case 3:
-                        player_2_STATUS.setText("S.K.A.T");
-                        model.setPlayer2_skate(4);
-                        break;
-                    case 4:
-                        player_2_STATUS.setText("S.K.A.T.E");
-                        model.setPlayer2_skate(5);
-                        break;
-                    default:
-                        player_2_STATUS.setText("YOU LOSE");
-                        break;
+                if(playerStatus == 5) {
+                    player_2_STATUS.setText("YOU LOSE");
+                } else {
+                    /* originally ran into the mistake of using post incrementer in
+                     * parameter. Java is PASS BY VALUE. post incrementer passes the
+                     * original value, then increments it. The method would the original value
+                     * before it was incremented.
+                    */
+                    playerStatus++;
+                    player_2_STATUS.setText(SKATE[playerStatus]);
+                    model.setPlayer2_skate(playerStatus);
                 }
             }
         });
